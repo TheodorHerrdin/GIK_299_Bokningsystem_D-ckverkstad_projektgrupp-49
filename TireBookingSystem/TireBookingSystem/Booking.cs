@@ -194,8 +194,42 @@ namespace TireBookingSystem
 
         public static void CancelBooking() 
         {
-            Console.WriteLine("Här kommer tider att avbokas senare");
-            Console.WriteLine("Tryck på valfri tangent för att gå vidare");
+            Console.Clear();
+            Console.WriteLine("Avboka tid");
+            Console.WriteLine();
+
+            Console.Write("Ange fordonets registreringsnummer för att avboka: ");
+            Console.WriteLine();
+            string SearchRegistrationNumber = Console.ReadLine();
+
+            Booking bookingToRemove = BookingList.Find(b => b.Vehicle.RegistrationNumber == SearchRegistrationNumber);
+
+            if (bookingToRemove != null) 
+            {
+                Console.WriteLine("Hittade bokning för registreringsnummer: " + SearchRegistrationNumber);
+                Console.WriteLine($"Kund: {bookingToRemove.Name.FirstName} {bookingToRemove.Name.LastName}");
+                Console.WriteLine($"Datum och tid: {bookingToRemove.BookingDate:yyyy-MM-dd HH:mm}");
+
+                Console.WriteLine();
+                Console.Write("För att avboka tiden vänligen ange (j) om du vill behålla tiden ange (n): ");
+                string confirm = Console.ReadLine();
+
+                if (confirm == "j") 
+                {
+                    BookingList.Remove(bookingToRemove);
+                    Console.WriteLine("\nBokningen har nu tagits bort");
+                }
+                else 
+                {
+                    Console.WriteLine("\nAvbokningen är avbruten");
+                }
+            }
+            else 
+            {
+                Console.WriteLine("\nIngen bokning hittades för registreringsnummer: " + SearchRegistrationNumber);
+            }
+
+            Console.WriteLine("\nTryck på valfri tangent för att gå vidare");
             Console.ReadKey();
         }
 
