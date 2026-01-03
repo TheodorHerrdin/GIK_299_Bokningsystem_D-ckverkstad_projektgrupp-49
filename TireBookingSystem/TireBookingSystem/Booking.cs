@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,6 +76,7 @@ namespace TireBookingSystem
                 Console.WriteLine("2: Däckbalansering");
                 Console.WriteLine("3: Däckförvaring");
                 Console.WriteLine("4: Punkteringslagning");
+                Console.WriteLine();
                 Console.Write("Välj en tjänst (1-4): ");
                 string serviceChoice = Console.ReadLine();
 
@@ -108,6 +110,7 @@ namespace TireBookingSystem
 
             while (!isDateValid) 
             {
+                Console.WriteLine();
                 Console.WriteLine("Ange datum och tid för din bokning verkstaden är öppen mellan 08:00-18:00");
                 Console.WriteLine();
 
@@ -137,8 +140,7 @@ namespace TireBookingSystem
 
                                 if (date < DateTime.Now)
                                 {
-                                    Console.WriteLine();
-                                    Console.WriteLine("Fel, du kan inte boka en tid som redan har passerat");
+                                    Console.WriteLine("\nFel, du kan inte boka en tid som redan har passerat");
                                     continue;
                                 }
 
@@ -147,7 +149,7 @@ namespace TireBookingSystem
                                 if (isOccupied)
                                 {
                                     Console.WriteLine();
-                                    Console.WriteLine("Tyvärr är den här tiden redan bokad");
+                                    Console.WriteLine("\nTyvärr är den här tiden redan bokad");
                                     continue;
                                 }
 
@@ -158,15 +160,23 @@ namespace TireBookingSystem
                             catch
                             {
                                 Console.WriteLine();
-                                Console.WriteLine("Ogiltigt datum eller tid. Försök igen.");
+                                Console.WriteLine("\nOgiltigt datum kontrollera att året, månaden och dagen stämmer.");
                             }
                         }
                         else
                         {
                             Console.WriteLine();
-                            Console.WriteLine("Tiden måste vara mellan 08:00 och 17:30. Försök igen.");
+                            Console.WriteLine("\nTiden måste vara mellan 08:00 och 17:30. Försök igen.");
                         }
                     }
+                    else
+                    {
+                        Console.WriteLine("\nOgiltigt tidsformat, använd (HH:mm)");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("\nOgiltigt datumformat, använd (ÅÅÅÅ-MM-DD)");
                 }
             }
 
@@ -177,7 +187,8 @@ namespace TireBookingSystem
             BookingList.Add(newBooking);
 
             Console.WriteLine();
-            Console.WriteLine("Bokningen är nu registrerad! Tryck på en valfri tangent för att gå vidare");
+            Console.WriteLine("Bokningen är nu registrerad!");
+            Console.WriteLine("Tryck på en valfri tangent för att gå vidare");
             Console.ReadKey();
         }
 
@@ -190,8 +201,37 @@ namespace TireBookingSystem
 
         public static void ListBookings()
         {
-            Console.WriteLine("Här kommer alla bokningar att visas senare i koden");
-            Console.WriteLine("Tryck på valfri tangent för att gå tillbaka");
+            Console.Clear();
+            Console.WriteLine("Alla bokningar");
+            Console.WriteLine();
+
+            if (BookingList.Count == 0) 
+            {
+                Console.WriteLine("Det finns inga bokningar registrerade");
+            }
+            else
+            {
+                foreach (var booking in BookingList)
+                {
+                    string serviceSwedish = booking.Service switch
+                    {
+                        ServiceType.TireChange => "Däckbyte",
+                        ServiceType.Balancing => "Balansering",
+                        ServiceType.Tirestorage => "Däckförvaring",
+                        ServiceType.Puncturerepair => "Punkteringslagning",
+                        _ => booking.Service.ToString()
+                    };
+
+                    Console.WriteLine($"Kund: {booking.Name.FirstName} {booking.Name.LastName}");
+                    Console.WriteLine($"Fordon: {booking.Vehicle.RegistrationNumber}");
+                    Console.WriteLine($"Datum och tid: {booking.BookingDate:yyyy-MM-dd HH:mm}");
+                    Console.WriteLine($"Tjänst: {serviceSwedish}");
+                    Console.WriteLine();
+                }
+
+            }
+
+            Console.WriteLine("Tryck på valfri tangent för att gå tillbaka till menyn");
             Console.ReadKey();
         }
     }
