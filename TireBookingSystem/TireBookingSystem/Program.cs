@@ -16,7 +16,7 @@
                 Console.WriteLine("Nummer 3: Avboka din tid");
                 Console.WriteLine("Nummer 4: Visa alla bokningar");
                 Console.WriteLine("Nummer 5: Avsluta programmet");
-                Console.Write("Välj en siffra: ");
+                Console.Write("Välj en siffra (1-5): ");
 
                 string choice = Console.ReadLine();
 
