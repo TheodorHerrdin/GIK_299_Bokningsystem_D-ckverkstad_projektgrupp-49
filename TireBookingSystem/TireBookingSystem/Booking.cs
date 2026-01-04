@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TireBookingSystem
 {
-
+    //Structs för att definiera kundnamn och registeringsnummer
     public struct CustomerName 
     {
         public string FirstName;
@@ -19,6 +19,7 @@ namespace TireBookingSystem
         public string RegistrationNumber;
     }
 
+    //Enum för att definiera de olika tjänsterna som verkstaden erbjuder
     public enum ServiceType 
     {
         TireChange = 1,
@@ -27,16 +28,19 @@ namespace TireBookingSystem
         Puncturerepair
     }
 
+    //Huvudklassen för allt som rör bokningarna
     public class Booking
     {
-
+        //Egenskaper som varje bokning måste innehålla
         public CustomerName Name { get; set; }
         public VehicleInfo Vehicle { get; set; }
         public DateTime BookingDate { get; set; }
         public ServiceType Service { get; set; }
 
+        //Den centrala listan som lagrar alla bokningar
         public static List<Booking> BookingList = new List<Booking>();
 
+        //Konstruktorn körs varje gång en ny bokning skapas
         public Booking(CustomerName name, VehicleInfo vehicle, DateTime date, ServiceType service)
         {
             Name = name;
@@ -45,23 +49,28 @@ namespace TireBookingSystem
             Service = service;
         }
 
+        //Metoden för att söka efter vilka lediga tider som finns på ett valt datum
         public static void SearchFreeTimes() 
         {
             Console.Clear();
-            Console.WriteLine("Se lediga tider");
+            Console.WriteLine();
             Console.Write("Vilket datum vill du se tider för? ange (ÅÅÅÅ-MM-DD): ");
 
+            //Tillsammans med en if-sats för att hantera både giltiga och ogiltiga inmatningar utan att systemet kraschar
+            //En TryParse för att säkerställa att användaren matar in ett giltigt datum
             if (DateTime.TryParse(Console.ReadLine(), out DateTime selectedDate)) 
             {
+                //Här definieras det vilka tider som verkstaden är öppen och som går att bokas
                 List<int> openingHours = new List<int> { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
-
                 List<int> minutes = new List<int> { 0, 30 };
                 Console.WriteLine();
 
+                //Här loopas det igenom alla öppettider och kontrolleras mot bokningslistan om tiden är bokad eller ledig
                 foreach (int hour in openingHours)
                 {
                     foreach (int min in minutes) 
                     {
+                        //Här kontrolleras det om tiden är bokad genom att jämföra datum och tid med bokningslistan
                         bool isOccupied = BookingList.Exists(b => b.BookingDate.Date == selectedDate.Date && b.BookingDate.Hour == hour && b.BookingDate.Minute == min);
 
                         string timeString = $"{hour:D2}:{min:D2}";
@@ -86,12 +95,14 @@ namespace TireBookingSystem
             Console.ReadKey();
         }
 
+        //Metoden för att lägga till en ny bokning
         public static void AddBooking()
         {
             Console.Clear();
             Console.WriteLine("Ny tidsbokning");
             Console.WriteLine();
 
+            //Här hämtas uppgifter från användaren som för och efternamn samt registreringsnummer
             Console.Write("Ange förnamn: ");
             string FirstName = Console.ReadLine();
             Console.Write("Ange efternamn: ");
@@ -99,6 +110,7 @@ namespace TireBookingSystem
             Console.Write("Ange registreringsnummer: ");
             string RegistrationNumber = Console.ReadLine();
 
+            //Här använder vi en while-loop för att säkerställa att användaren väljer ett giltigt tjänstealternativ (1-4)
             ServiceType selectedService = ServiceType.TireChange;
             bool isServiceValid = false;
 
@@ -114,24 +126,30 @@ namespace TireBookingSystem
                 Console.Write("Välj en tjänst (1-4): ");
                 string serviceChoice = Console.ReadLine();
 
+                //Här används en switch-sats för att hantera användarens val av tjänst
                 switch (serviceChoice)
                 {
+                    //Väljer användern case 1 så väljs tjänsten TireChange och Selectedservice sätts till true för att bryta loopen
                     case "1":
                         selectedService = ServiceType.TireChange;
                         isServiceValid = true;
                         break;
+                    //Väljer användern case 2 så väljs tjänsten Balancing och Selectedservice sätts till true för att bryta loopen
                     case "2":
                         selectedService = ServiceType.Balancing;
                         isServiceValid = true;
                         break;
+                    //Väljer användern case 3 så väljs tjänsten Tirestorage och Selectedservice sätts till true för att bryta loopen
                     case "3":
                         selectedService = ServiceType.Tirestorage;
                         isServiceValid = true;
                         break;
+                    //Väljer användern case 4 så väljs tjänsten Puncturerepair och Selectedservice sätts till true för att bryta loopen
                     case "4":
                         selectedService = ServiceType.Puncturerepair;
                         isServiceValid = true;
                         break;
+                    //Om användaren anger ett ogiltigt val så visas ett felmeddelande och loopen fortsätter
                     default:
                         Console.WriteLine("\nOgiltigt val, vänligen ange en siffra mellan 1-4.");
                         break;

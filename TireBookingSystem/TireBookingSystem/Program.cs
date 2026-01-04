@@ -40,7 +40,9 @@
                         runProgram = false;
                         break;
                     default:
-                        Console.WriteLine("Ogilitgt val, vänligen ange 1, 2 eller 3... Prova igen");
+                        Console.WriteLine("\nOgilitgt val, vänligen ange 1, 2, 3, 4 eller 5... Prova igen");
+                        Console.WriteLine("\nTryck på en valfri tagent för att gå tillbaka till menyn");
+                        Console.ReadKey();
                         break;
 
                 }
