@@ -47,8 +47,42 @@ namespace TireBookingSystem
 
         public static void SearchFreeTimes() 
         {
-            Console.WriteLine("Här kommer lediga tider att visas senare i koden");
-            Console.WriteLine("Tryck på en valfri tangent för att gå vidare");
+            Console.Clear();
+            Console.WriteLine("Se lediga tider");
+            Console.Write("Vilket datum vill du se tider för? ange (ÅÅÅÅ-MM-DD): ");
+
+            if (DateTime.TryParse(Console.ReadLine(), out DateTime selectedDate)) 
+            {
+                List<int> openingHours = new List<int> { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
+
+                List<int> minutes = new List<int> { 0, 30 };
+                Console.WriteLine();
+
+                foreach (int hour in openingHours)
+                {
+                    foreach (int min in minutes) 
+                    {
+                        bool isOccupied = BookingList.Exists(b => b.BookingDate.Date == selectedDate.Date && b.BookingDate.Hour == hour && b.BookingDate.Minute == min);
+
+                        string timeString = $"{hour:D2}:{min:D2}";
+
+                        if (!isOccupied)
+                        {
+                            Console.WriteLine($"{hour:D2}:{min:D2} - Ledig");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{hour:D2}:{min:D2} - Bokad");
+                        }
+                    }
+                }
+            }
+            else 
+            {
+                Console.WriteLine("\nOgiltigt datumformat, använd (ÅÅÅÅ-MM-DD)");
+            }
+
+            Console.WriteLine("\nTryck på en valfri tangent för att gå vidare");
             Console.ReadKey();
         }
 
@@ -114,7 +148,7 @@ namespace TireBookingSystem
                 Console.WriteLine("Ange datum och tid för din bokning verkstaden är öppen mellan 08:00-18:00");
                 Console.WriteLine();
 
-                Console.WriteLine("Ange ett datum (ÅÅÅÅ-MM-DD): ");
+                Console.Write("Ange ett datum (ÅÅÅÅ-MM-DD): ");
                 string dateInput = Console.ReadLine();
                 string[] dateParts = dateInput.Split('-');
 
@@ -188,7 +222,7 @@ namespace TireBookingSystem
 
             Console.WriteLine();
             Console.WriteLine("Bokningen är nu registrerad!");
-            Console.WriteLine("Tryck på en valfri tangent för att gå vidare");
+            Console.WriteLine("\nTryck på en valfri tangent för att gå vidare");
             Console.ReadKey();
         }
 
@@ -265,7 +299,7 @@ namespace TireBookingSystem
 
             }
 
-            Console.WriteLine("Tryck på valfri tangent för att gå tillbaka till menyn");
+            Console.WriteLine("\nTryck på valfri tangent för att gå tillbaka till menyn");
             Console.ReadKey();
         }
     }
