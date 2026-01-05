@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TireBookingSystem
 {
-    //Structs för att definiera kundnamn och registeringsnummer
+    //Structs för att definiera kundnamn och registreringsnummer
     public struct CustomerName 
     {
         public string FirstName;
@@ -37,7 +37,7 @@ namespace TireBookingSystem
         public DateTime BookingDate { get; set; }
         public ServiceType Service { get; set; }
 
-        //Den centrala listan som lagrar alla bokningar
+        //Den centrala listan som sparar bokningarna
         public static List<Booking> BookingList = new List<Booking>();
 
         //Konstruktorn körs varje gång en ny bokning skapas
@@ -56,16 +56,16 @@ namespace TireBookingSystem
             Console.WriteLine();
             Console.Write("Vilket datum vill du se tider för? ange (ÅÅÅÅ-MM-DD): ");
 
-            //Tillsammans med en if-sats för att hantera både giltiga och ogiltiga inmatningar utan att systemet kraschar
-            //En TryParse för att säkerställa att användaren matar in ett giltigt datum
+            //En if-sats för att hantera både giltiga och ogiltiga inmatningar utan att systemet kraschar
+            //En TryParse för att kontrollera att inmatningen verkligen är ett datum
             if (DateTime.TryParse(Console.ReadLine(), out DateTime selectedDate)) 
             {
-                //Här definieras det vilka tider som verkstaden är öppen och som går att bokas
+                //Här definieras en lista med tiderna som verkstaden är öppen och som går att bokas
                 List<int> openingHours = new List<int> { 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 };
                 List<int> minutes = new List<int> { 0, 30 };
                 Console.WriteLine();
 
-                //Här loopas det igenom alla öppettider och kontrolleras mot bokningslistan om tiden är bokad eller ledig
+                //En nästlad foreach-loop för att gå igenom varje timme och minut för det valda datumet
                 foreach (int hour in openingHours)
                 {
                     foreach (int min in minutes) 
@@ -95,7 +95,7 @@ namespace TireBookingSystem
             Console.ReadKey();
         }
 
-        //Metoden för att lägga till en ny bokning
+        //Metoden för att samla in data och lägga till en ny bokning
         public static void AddBooking()
         {
             Console.Clear();
@@ -110,7 +110,7 @@ namespace TireBookingSystem
             Console.Write("Ange registreringsnummer: ");
             string RegistrationNumber = Console.ReadLine();
 
-            //Här använder vi en while-loop för att säkerställa att användaren väljer ett giltigt tjänstealternativ (1-4)
+            //En while-loop tillsammans med en bool för att säkerställa att användaren väljer ett giltigt tjänstealternativ (1-4) innan loopen bryts
             ServiceType selectedService = ServiceType.TireChange;
             bool isServiceValid = false;
 
@@ -160,6 +160,7 @@ namespace TireBookingSystem
             DateTime date = DateTime.Now;
             bool isDateValid = false;
 
+            //En while-loop för datumhantering som fortsätter tills ett giltigt datum och tid har angetts och är tillgängöigt
             while (!isDateValid) 
             {
                 Console.WriteLine();
@@ -168,8 +169,10 @@ namespace TireBookingSystem
 
                 Console.Write("Ange ett datum (ÅÅÅÅ-MM-DD): ");
                 string dateInput = Console.ReadLine();
+                //Split metoden delar upp datumsträngen i år, månad och dag med -
                 string[] dateParts = dateInput.Split('-');
 
+                //Här kontrolleras att användaren anger år, månad och dag korrekt
                 if (dateParts.Length == 3 &&
                      int.TryParse(dateParts[0], out year) &&
                      int.TryParse(dateParts[1], out month) &&
@@ -177,25 +180,30 @@ namespace TireBookingSystem
 
                 {   Console.Write("Ange en tid mellan (08:00-17:30): ");
                     string timeInput = Console.ReadLine();
-
+                    //Split metoden delar upp tidssträngen i timme och minut med :
                     string[] timeParts = timeInput.Split(':');
 
+                    //Här kontrolleras att användaren anger timme och minut korrekt
                     if (timeParts.Length == 2 &&
                         int.TryParse(timeParts[0], out hour) &&
                         int.TryParse(timeParts[1], out minute))
                     {
+                        //Här kontrolleras att tiden ligger inom verkstadens öppettider
                         if (hour >= 8 && hour <= 17 && minute >= 0 && minute < 60)
                         {
                             try
                             {
+                                //Här skapas ett DateTime objekt med de angivna värdena
                                 date = new DateTime(year, month, day, hour, minute, 0);
 
+                                //Kontrollerar att datumet inte har passerat
                                 if (date < DateTime.Now)
                                 {
                                     Console.WriteLine("\nFel, du kan inte boka en tid som redan har passerat");
                                     continue;
                                 }
 
+                                //Any-metoden används för att kontrollera om den valda tiden redan är bokad
                                 bool isOccupied = BookingList.Any(b => b.BookingDate == date);
 
                                 if (isOccupied)
@@ -205,37 +213,46 @@ namespace TireBookingSystem
                                     continue;
                                 }
 
+                                //När vi har kommit hit så är datumet och tiden giltiga och tillgängliga
                                 isDateValid = true;
                                 break;
 
                             }
+                            //Felhantering för ogiltiga datum
                             catch
                             {
                                 Console.WriteLine();
                                 Console.WriteLine("\nOgiltigt datum kontrollera att året, månaden och dagen stämmer.");
                             }
                         }
+                        //Felhantering för tider utanför öppettiderna
                         else
                         {
                             Console.WriteLine();
                             Console.WriteLine("\nTiden måste vara mellan 08:00 och 17:30. Försök igen.");
                         }
                     }
+                    //Felhantering för ogiltiga tidsformat
                     else
                     {
                         Console.WriteLine("\nOgiltigt tidsformat, använd (HH:mm)");
                     }
                 }
+                //Felhantering för ogiltiga datumformat
                 else
                 {
                     Console.WriteLine("\nOgiltigt datumformat, använd (ÅÅÅÅ-MM-DD)");
                 }
             }
 
+            //Här samlas de olika uppgifterna som behövs för bokningen in i sina respektive structs
             CustomerName customerName = new CustomerName { FirstName = FirstName, LastName = LastName };
             VehicleInfo vehicleInfo = new VehicleInfo { RegistrationNumber = RegistrationNumber };
 
+            //Skapar en ny bokning med de insamlade uppgifterna
             Booking newBooking = new Booking(customerName, vehicleInfo, date, selectedService);
+
+            //Den nya bokningen sparas till bokningslistan så den finns kvar under programmets gång
             BookingList.Add(newBooking);
 
             Console.WriteLine();
@@ -244,18 +261,20 @@ namespace TireBookingSystem
             Console.ReadKey();
         }
 
-        public static void CancelBooking() 
+        //Metod för att avboka en befintlig bokning
+        public static void CancelBooking()
         {
             Console.Clear();
             Console.WriteLine("Avboka tid");
             Console.WriteLine();
 
             Console.Write("Ange fordonets registreringsnummer för att avboka: ");
-            Console.WriteLine();
             string SearchRegistrationNumber = Console.ReadLine();
 
+            //Find-metoden används för att hitta bokningen med det angivna registreringsnumret
             Booking bookingToRemove = BookingList.Find(b => b.Vehicle.RegistrationNumber == SearchRegistrationNumber);
 
+            //Om bokningen hittas så visas information om bokningen och användaren får bekräfta avbokningen
             if (bookingToRemove != null) 
             {
                 Console.WriteLine("Hittade bokning för registreringsnummer: " + SearchRegistrationNumber);
@@ -266,17 +285,21 @@ namespace TireBookingSystem
                 Console.Write("För att avboka tiden vänligen ange (j) om du vill behålla tiden ange (n): ");
                 string confirm = Console.ReadLine();
 
+                //Om användaren bekräftar avbokningen med (j) så tas bokningen bort från listan
                 if (confirm == "j") 
                 {
+                    //Remove tar bort den specifika bokningen från listan
                     BookingList.Remove(bookingToRemove);
                     Console.WriteLine("\nBokningen har nu tagits bort");
                 }
-                else 
+                //Om användaren avbryter avbokningen med (n) så visas ett meddelande om att avbokningen är avbruten
+                else
                 {
                     Console.WriteLine("\nAvbokningen är avbruten");
                 }
             }
-            else 
+            //Om ingen bokning hittas med det angivna registreringsnumret så visas ett felmeddelande
+            else
             {
                 Console.WriteLine("\nIngen bokning hittades för registreringsnummer: " + SearchRegistrationNumber);
             }
@@ -285,20 +308,24 @@ namespace TireBookingSystem
             Console.ReadKey();
         }
 
+        //Metod för att lista alla befintliga bokningar
         public static void ListBookings()
         {
             Console.Clear();
             Console.WriteLine("Alla bokningar");
             Console.WriteLine();
 
+            //Kontrollerar om bokningslistan är tom
             if (BookingList.Count == 0) 
             {
                 Console.WriteLine("Det finns inga bokningar registrerade");
             }
             else
             {
+                //En foreach-loop för att gå igenom varje bokning i listan och skriva ut dess detaljer
                 foreach (var booking in BookingList)
                 {
+                    //En switch-sats för att översätta tjänstetyperna från engelska till svenska när de skrivs ut i konsolen
                     string serviceSwedish = booking.Service switch
                     {
                         ServiceType.TireChange => "Däckbyte",
@@ -308,6 +335,7 @@ namespace TireBookingSystem
                         _ => booking.Service.ToString()
                     };
 
+                    //Skriver ut bokningsinformationen i ett läsbart format
                     Console.WriteLine($"Kund: {booking.Name.FirstName} {booking.Name.LastName}");
                     Console.WriteLine($"Fordon: {booking.Vehicle.RegistrationNumber}");
                     Console.WriteLine($"Datum och tid: {booking.BookingDate:yyyy-MM-dd HH:mm}");
