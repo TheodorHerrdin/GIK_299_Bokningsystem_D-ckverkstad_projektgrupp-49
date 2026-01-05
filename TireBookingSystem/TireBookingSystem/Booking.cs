@@ -160,7 +160,7 @@ namespace TireBookingSystem
             DateTime date = DateTime.Now;
             bool isDateValid = false;
 
-            //En while-loop för datumhantering som fortsätter tills ett giltigt datum och tid har angetts och är tillgängöigt
+            //En while-loop för datumhantering som fortsätter tills ett giltigt datum och tid har angetts och är tillgängligt
             while (!isDateValid) 
             {
                 Console.WriteLine();
@@ -189,7 +189,7 @@ namespace TireBookingSystem
                         int.TryParse(timeParts[1], out minute))
                     {
                         //Här kontrolleras att tiden ligger inom verkstadens öppettider
-                        if (hour >= 8 && hour <= 17 && minute >= 0 && minute < 60)
+                        if (hour >= 8 && hour <= 17 && (minute == 0 || minute == 30))
                         {
                             try
                             {
