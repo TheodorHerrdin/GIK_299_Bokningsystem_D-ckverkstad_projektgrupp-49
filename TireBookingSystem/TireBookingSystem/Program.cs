@@ -46,8 +46,8 @@
                         break;
                     //Om användern anger något annat än 1-5 visas ett felmeddelande och menyn visas igen
                     default:
-                        Console.WriteLine("\nOgilitgt val, vänligen ange 1, 2, 3, 4 eller 5... Prova igen");
-                        Console.WriteLine("\nTryck på en valfri tagent för att gå tillbaka till menyn");
+                        Console.WriteLine("\nOgiltigt val, vänligen ange 1, 2, 3, 4 eller 5... Prova igen");
+                        Console.WriteLine("\nTryck på en valfri tangent för att gå tillbaka till menyn");
                         Console.ReadKey();
                         break;
 
