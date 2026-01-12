@@ -29,16 +29,16 @@
                 switch (choice)
                 {
                     case "1":
-                        Booking.SearchFreeTimes();
+                        BookingSystem.SearchFreeTimes();
                         break;
                     case "2":
-                        Booking.AddBooking();
+                        BookingSystem.AddBooking();
                         break;
                     case "3":
-                        Booking.CancelBooking();
+                        BookingSystem.CancelBooking();
                         break;
                     case "4":
-                        Booking.ListBookings();
+                        BookingSystem.ListBookings();
                         break;
                     case "5":
                         //Om nummer 5 väljs sätts runProgram till false för att avsluta loopen och därmed programmet
