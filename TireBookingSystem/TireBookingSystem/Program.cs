@@ -4,6 +4,9 @@
     {
         static void Main(string[] args)
         {
+            //Anropar metoden AdminLogin för att tvinga administratörsinloggning innan menyn visas
+            AdminLogin();
+            
             //En bool för att hålla igång programmet tills användaren väljer att avsluta
             bool runProgram = true;
 
@@ -55,6 +58,32 @@
                         Console.ReadKey();
                         break;
 
+                }
+            }
+        }
+
+        //Metod för administratörsinloggning
+        static void AdminLogin() 
+        {
+            //En oändlig loop som fortsätter tills rätt lösenord anges
+            while (true) 
+            {
+                Console.Clear();
+                Console.WriteLine("Administratörsinloggning");
+                Console.Write("Ange lösenord: ");
+                string input = Console.ReadLine();
+
+                //Kontrollerar om det angivna lösenordet är korrekt
+                if (input == "admin123")
+                {
+                    //Om lösenordet är korrekt bryts loopen och programmet fortsätter
+                    break;
+                }
+                //Om lösenordet är felaktigt visas ett felmeddelande och loopen fortsätter
+                else
+                {
+                    Console.WriteLine("Fel lösenord. Tryck på en valfri tangent för att försöka igen.");
+                    Console.ReadKey();
                 }
             }
         }
