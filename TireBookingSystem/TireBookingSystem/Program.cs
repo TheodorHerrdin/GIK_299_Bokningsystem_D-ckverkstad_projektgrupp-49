@@ -24,7 +24,7 @@
                 Console.WriteLine("Nummer 5: Visa dagens bokningar");
                 Console.WriteLine("Nummer 6: Avsluta programmet");
                 Console.WriteLine();
-                Console.Write("Välj en siffra (1-5): ");
+                Console.Write("Välj en siffra (1-6): ");
 
                 //Läser in användarens val som en sträng
                 string choice = Console.ReadLine();
