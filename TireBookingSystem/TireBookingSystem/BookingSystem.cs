@@ -341,5 +341,49 @@ namespace TireBookingSystem
             Console.WriteLine("\nTryck på valfri tangent för att gå tillbaka till menyn");
             Console.ReadKey();
         }
+
+        //Metod för att visa dagens bokningar
+        public static void ListTodaysBookings() 
+        {
+            Console.Clear();
+            //Hämtar dagens datum och skriver ut det
+            DateTime today = DateTime.Today;
+            Console.WriteLine($"Dagens bokningar: {today:yyyy-MM-dd}");
+            Console.WriteLine();
+
+            //Söker igenom huvudlistan för bokningar som matchar dagens datum
+            var todaysBookings = BookingList.Where(b => b.BookingDate.Date == today).ToList();
+
+            //Om vi inte hittar några bokningar för idag så visas ett meddelande
+            if (todaysBookings.Count == 0)
+            {
+                Console.WriteLine("Det finns inga bokningar inplanerade idag");
+            }
+            else 
+            {
+                //En foreach-loop för att gå igenom varje bokning i listan och skriva ut dess detaljer
+                foreach (var booking in todaysBookings) 
+                {
+                    //En switch-sats för att översätta tjänstetyperna från engelska till svenska när de skrivs ut i konsolen
+                    string serviceSwedish = booking.Service switch
+                    {
+                        ServiceType.TireChange => "Däckbyte",
+                        ServiceType.Balancing => "Balansering",
+                        ServiceType.Tirestorage => "Däckförvaring",
+                        ServiceType.Puncturerepair => "Punkteringslagning",
+                        _ => booking.Service.ToString()
+                    };
+
+                    //Skriver ut bokningsinformationen i ett läsbart format
+                    Console.WriteLine($"Kund: {booking.Name.FirstName} {booking.Name.LastName}");
+                    Console.WriteLine($"Fordon: {booking.Vehicle.RegistrationNumber}");
+                    Console.WriteLine($"Tid: {booking.BookingDate:HH:mm}");
+                    Console.WriteLine($"Tjänst: {serviceSwedish}");
+                    Console.WriteLine();
+                }
+            }
+            Console.WriteLine("\nTryck på valfri tangent för att gå tillbaka till menyn");
+            Console.ReadKey();
+        }
     }
 }

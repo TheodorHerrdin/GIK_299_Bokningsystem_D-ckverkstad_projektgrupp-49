@@ -18,7 +18,8 @@
                 Console.WriteLine("Nummer 2: Lägg till en ny bokning");
                 Console.WriteLine("Nummer 3: Avboka din tid");
                 Console.WriteLine("Nummer 4: Visa alla bokningar");
-                Console.WriteLine("Nummer 5: Avsluta programmet");
+                Console.WriteLine("Nummer 5: Visa dagens bokningar");
+                Console.WriteLine("Nummer 6: Avsluta programmet");
                 Console.WriteLine();
                 Console.Write("Välj en siffra (1-5): ");
 
@@ -41,7 +42,10 @@
                         BookingSystem.ListBookings();
                         break;
                     case "5":
-                        //Om nummer 5 väljs sätts runProgram till false för att avsluta loopen och därmed programmet
+                        BookingSystem.ListTodaysBookings();
+                        break;
+                    //Om nummer 6 väljs sätts runProgram till false för att avsluta loopen och därmed programmet
+                    case "6":
                         runProgram = false;
                         break;
                     //Om användern anger något annat än 1-5 visas ett felmeddelande och menyn visas igen
